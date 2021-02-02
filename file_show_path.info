@@ -1,0 +1,5 @@
+name = File Show Path
+description = Display the relative path for a file attachment on the edit page.
+package = Other - OrigamiUSA
+backdrop = 1.x
+type = module

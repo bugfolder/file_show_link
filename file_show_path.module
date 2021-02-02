@@ -1,0 +1,37 @@
+<?php
+/**
+ * @file
+ * Display the relative link that goes with a file attachment.
+ */
+
+/**
+ * Implements hook_preprocess().
+ */
+function file_show_path_preprocess_file_widget(&$variables) {
+  if (isset($variables['element']['filename'])) {
+    $file = $variables['element']['#file'];
+    $uri = $file->uri;
+    if (substr($uri, 0, 12) == 'temporary://' ||
+      substr($uri, 0, 25) == 'public://filefield_paths/') {
+      $markup = t('File path will be defined after node is saved');
+    }
+    else {
+      if (substr($uri, 0, 10) == 'private://') {
+        $link = '/system/files/' . substr($uri, 10);
+      }
+      else {
+        $link = '/' . config_get('system.core', 'file_public_path') .
+          '/' . substr($uri, 9);
+      }
+      $link = backdrop_encode_path($link);
+      $markup = t('Link to this file using <span class="file-show-link-link">@link</span>',
+        array('@link' => $link));
+    }
+    $variables['element']['#columns'][] = 'show_link';
+    $variables['element']['show_link'] = array(
+      '#markup' => $markup,
+      '#prefix' => '<div class="file-show-link">',
+      '#suffix' => '</div>',
+    );
+  }
+}
